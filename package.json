@@ -1,0 +1,14 @@
+{
+  "name": "rest-api-squeezebox",
+  "version": "0.0.0",
+  "description": "This REST API is a translation of the slimserver / squeezebox server JSON RPC API.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/legrosmanu/rest-api-squeezebox"
+  },
+  "author": "Emmanuel LEGROS",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
