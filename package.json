@@ -9,6 +9,8 @@
   "author": "Emmanuel LEGROS",
   "license": "Apache-2.0",
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "q": "^1.4.1",
+    "request": "^2.72.0"
   }
 }
