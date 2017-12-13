@@ -51,9 +51,11 @@ var getPlayers = function (numberPlayers) {
                 uuid: item.uuid,
                 name: item.name,
                 ip: item.ip,
-                model: item.modelname,
                 can_power_off: (item.canpoweroff === 1),
-                firmware_version: item.firmware
+                is_on : (item.power === 1),
+                model: item.modelname,
+                firmware_version: item.firmware,
+                is_known_player_model: (item.isplayer === 1)
             };
             players.push(player);
         });
