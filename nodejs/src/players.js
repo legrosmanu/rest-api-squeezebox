@@ -47,15 +47,12 @@ var getPlayers = function (numberPlayers) {
         var players = [];
         result.players_loop.forEach(function(item) {
             var player = {
-                id: item.playerid,
-                uuid: item.uuid,
                 name: item.name,
+                uuid: item.uuid,
+                id: item.playerid,
                 ip: item.ip,
-                can_power_off: (item.canpoweroff === 1),
-                is_on : (item.power === 1),
                 model: item.modelname,
-                firmware_version: item.firmware,
-                is_known_player_model: (item.isplayer === 1)
+                firmware_version: item.firmware
             };
             players.push(player);
         });
