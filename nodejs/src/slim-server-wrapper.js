@@ -17,13 +17,14 @@ var slimRequest = function (slimCommand) {
             body: slimCommand
         }, function (error, response, body) {
             if (error) {
-                deferred.reject(error);
+                throw error;
             } else {
                 deferred.resolve(body.result);
             }
         });
     } catch (err) {
         console.log("Error catched slimRequest : " + err);
+        deferred.reject(err);
     }
     return deferred.promise;
 };
@@ -44,17 +45,17 @@ var getNbPlayers = function () {
             params: ['-', ['player', 'count', '?']]
         };
         slimRequest(slimCommand).then(function (result) {
-            if (result._count) {
+            if (result._count !== undefined) {
                 deferred.resolve(result._count);
             } else {
-                console.log("Error getNbPlayers. result._count nout found");
+                deferred.reject("result._count nout found");
             }
         }, function (error) {
-            console.log("Error getNbPlayers : " + error);
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched getNbPlayers : " + err);
+        console.log("Error catched slimserver getNbPlayers : " + err);
+        deferred.reject(err);
     }
     return deferred.promise;
 };
@@ -68,22 +69,23 @@ var getPlayers = function (numberPlayers) {
             params: ['-', ['players', '0', numberPlayers]]
         };
         slimRequest(slimCommand).then(function (result) {
-            if (result.players_loop) {
+            if (result.players_loop !== undefined) {
                 deferred.resolve(result.players_loop);
             } else {
-                deferred.reject("ERR getPlayer. players_loop not found");
+                deferred.reject("players_loop not found");
             }
         }, function (error) {
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched getPlayers : " + err);
+        console.log("Error catched slimserver getPlayers : " + err);
+        deferred.reject(err);
     }
 
     return deferred.promise;
 };
 
-var getPower = function(idPlayer) {
+var getPower = function (idPlayer) {
     var deferred = Q.defer();
     try {
         var slimCommand = {
@@ -92,18 +94,19 @@ var getPower = function(idPlayer) {
             params: [idPlayer, ['power', '?']]
         };
         slimRequest(slimCommand).then(function (result) {
-            if (result._power) {
-                var power = (result._power == 1) ? "on" : "off";
+            if (result._power !== undefined) {
+                var power = "on";
+                if (result._power == 0) power = "off";
                 deferred.resolve(power);
             } else {
-                deferred.reject("ERR getPower for the player " + idPlayer);
+                deferred.reject("_power not found for the player " + idPlayer);
             }
         }, function (error) {
-            console.log("Error getPower : " + error);
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched getPower : " + err);
+        console.log("Error catched slimserver getPower : " + err);
+        deferred.reject(err);
     }
     return deferred.promise;
 };
@@ -117,17 +120,17 @@ var getVolume = function (idPlayer) {
             params: [idPlayer, ['mixer', 'volume', '?']]
         };
         slimRequest(slimCommand).then(function (result) {
-            if (result._volume) {
+            if (result._volume !== undefined) {
                 deferred.resolve(result._volume);
             } else {
-                deferred.reject("ERR getVolume for the player " + idPlayer);
+                deferred.reject("_volume not found for the player " + idPlayer);
             }
         }, function (error) {
-            console.log("Error getNbPlayers : " + error);
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched getVolume : " + err);
+        console.log("Error catched slimserver getVolume : " + err);
+        deferred.reject(err);
     }
     return deferred.promise;
 };
@@ -141,17 +144,17 @@ var getBass = function (idPlayer) {
             params: [idPlayer, ['mixer', 'bass', '?']]
         };
         slimRequest(slimCommand).then(function (result) {
-            if (result._bass) {
+            if (result._bass !== undefined) {
                 deferred.resolve(result._bass);
             } else {
-                deferred.reject("ERR getBass for the player " + idPlayer);
+                deferred.reject("_bass not found for the player " + idPlayer);
             }
         }, function (error) {
-            console.log("Error getBass : " + error);
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched getBass : " + err);
+        console.log("Error catched slimserver getBass : " + err);
+        deferred.reject(err);
     }
     return deferred.promise;
 };
@@ -165,17 +168,17 @@ var getTreble = function (idPlayer) {
             params: [idPlayer, ['mixer', 'treble', '?']]
         };
         slimRequest(slimCommand).then(function (result) {
-            if (result._treble) {
+            if (result._treble !== undefined) {
                 deferred.resolve(result._treble);
             } else {
-                deferred.reject("ERR getTreble for the player " + idPlayer);
+                deferred.reject("_treble  not found for the player " + idPlayer);
             }
         }, function (error) {
-            console.log("Error getTreble : " + error);
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched getTreble : " + err);
+        console.log("Error catched slimserver getTreble : " + err);
+        deferred.reject(err);
     }
     return deferred.promise;
 };
