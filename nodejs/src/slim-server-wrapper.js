@@ -83,6 +83,31 @@ var getPlayers = function (numberPlayers) {
     return deferred.promise;
 };
 
+var getPower = function(idPlayer) {
+    var deferred = Q.defer();
+    try {
+        var slimCommand = {
+            id: 1,
+            method: 'slim.request',
+            params: [idPlayer, ['power', '?']]
+        };
+        slimRequest(slimCommand).then(function (result) {
+            if (result._power) {
+                var power = (result._power == 1) ? "on" : "off";
+                deferred.resolve(power);
+            } else {
+                deferred.reject("ERR getPower for the player " + idPlayer);
+            }
+        }, function (error) {
+            console.log("Error getPower : " + error);
+            deferred.reject(error);
+        });
+    } catch (err) {
+        console.log("Error catched getPower : " + err);
+    }
+    return deferred.promise;
+};
+
 var getVolume = function (idPlayer) {
     var deferred = Q.defer();
     try {
@@ -162,3 +187,4 @@ exports.getPlayers = getPlayers;
 exports.getVolume = getVolume;
 exports.getBass = getBass;
 exports.getTreble = getTreble;
+exports.getPower = getPower;

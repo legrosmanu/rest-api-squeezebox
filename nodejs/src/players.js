@@ -76,6 +76,8 @@ var getPlayer = function(uuid) {
     }).then(function(player) {
         return addTrebleToPlayer(player);
     }).then(function(player) {
+        return addPowerToPlayer(player);
+    }).then(function(player) {
         deferred.resolve(player);
     });
     return deferred.promise;
@@ -103,6 +105,15 @@ var addTrebleToPlayer = function(player) {
     var deferred = Q.defer();
     slimServer.getTreble(player.id).then(function(treble) {
         player.mixer.treble = treble;
+        deferred.resolve(player);
+    });
+    return deferred.promise;
+};
+
+var addPowerToPlayer = function(player) {
+    var deferred = Q.defer();
+    slimServer.getPower(player.id).then(function(power) {
+        player.power = power;
         deferred.resolve(player);
     });
     return deferred.promise;
