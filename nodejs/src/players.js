@@ -4,13 +4,8 @@ var Q = require("q");
 
 var getNbPlayers = function () {
     var deferred = Q.defer();
-    var slimCommand = {
-        id: 1,
-        method: 'slim.request',
-        params: ['-', ['player', 'count', '?']]
-    };
-    slimServer.slimRequest(slimCommand).then(function (result) {
-        deferred.resolve(result._count);
+    slimServer.getNbPlayers().then(function (nbPlayers) {
+        deferred.resolve(nbPlayers);
     }, function (error) {
         console.log("Error getNbPlayers : " + error);
         deferred.reject(error);
@@ -37,15 +32,9 @@ var getPlayers = function (numberPlayers) {
 
     var deferred = Q.defer();
 
-    var slimCommand = {
-        id: 1,
-        method: 'slim.request',
-        params: ['-', ['players', '0', numberPlayers]]
-    };
-
-    slimServer.slimRequest(slimCommand).then(function (result) {
+    slimServer.getPlayers(numberPlayers).then(function (playersLoop) {
         var players = [];
-        result.players_loop.forEach(function(item) {
+        playersLoop.forEach(function(item) {
             var player = {
                 name: item.name,
                 uuid: item.uuid,
@@ -94,7 +83,7 @@ var getPlayer = function(uuid) {
 
 var addVolumeToPlayer = function(player) {
     var deferred = Q.defer();
-    getVolume(player).then(function(volume) {
+    slimServer.getVolume(player.id).then(function(volume) {
         player.mixer.volume = volume;
         deferred.resolve(player);
     });
@@ -103,7 +92,7 @@ var addVolumeToPlayer = function(player) {
 
 var addBassToPlayer = function(player) {
     var deferred = Q.defer();
-    getBass(player).then(function(bass) {
+    slimServer.getBass(player.id).then(function(bass) {
         player.mixer.bass = bass;
         deferred.resolve(player);
     });
@@ -112,69 +101,9 @@ var addBassToPlayer = function(player) {
 
 var addTrebleToPlayer = function(player) {
     var deferred = Q.defer();
-    getTreble(player).then(function(treble) {
+    slimServer.getTreble(player.id).then(function(treble) {
         player.mixer.treble = treble;
         deferred.resolve(player);
-    });
-    return deferred.promise;
-};
-
-var getVolume = function(player) {
-    var deferred = Q.defer();
-    var slimCommand = {
-        id: 1,
-        method: 'slim.request',
-        params: [player.id, ['mixer', 'volume', '?']]
-    };
-    slimServer.slimRequest(slimCommand).then(function (result) {
-        if (result._volume) {
-            deferred.resolve(result._volume);
-        } else {
-            deferred.reject("ERR getVolume for the player " + player.id);    
-        }
-    }, function (error) {
-        console.log("Error getNbPlayers : " + error);
-        deferred.reject(error);
-    });
-    return deferred.promise;
-};
-
-var getBass = function(player) {
-    var deferred = Q.defer();
-    var slimCommand = {
-        id: 1,
-        method: 'slim.request',
-        params: [player.id, ['mixer', 'bass', '?']]
-    };
-    slimServer.slimRequest(slimCommand).then(function (result) {
-        if (result._bass) {
-            deferred.resolve(result._bass);
-        } else {
-            deferred.reject("ERR getBass for the player " + player.id);    
-        }
-    }, function (error) {
-        console.log("Error getBass : " + error);
-        deferred.reject(error);
-    });
-    return deferred.promise;
-};
-
-var getTreble = function(player) {
-    var deferred = Q.defer();
-    var slimCommand = {
-        id: 1,
-        method: 'slim.request',
-        params: [player.id, ['mixer', 'treble', '?']]
-    };
-    slimServer.slimRequest(slimCommand).then(function (result) {
-        if (result._treble) {
-            deferred.resolve(result._treble);
-        } else {
-            deferred.reject("ERR getTreble for the player " + player.id);    
-        }
-    }, function (error) {
-        console.log("Error getTreble : " + error);
-        deferred.reject(error);
     });
     return deferred.promise;
 };
