@@ -5,7 +5,7 @@ For now, you can find a nodeJS version on nodejs directory.
 For this version, notice on package.json the start script. Usualy, the squeezebox server is 9000, not 2311. I don't use the default port (9000) for my server, just for security reason.
 
 Endpoint that you can use :
-- /players : get players informations. The array returned looks like :
+- GET /players : get players informations. The array returned looks like :
 ```
 [
     {
@@ -26,7 +26,7 @@ Endpoint that you can use :
     }
 ]
 ```
-- /players/{uuid} : get informations for one player. The object returned looks like : 
+- GET /players/{uuid} : get informations for one player. The object returned looks like : 
 ```
 {
     "name": "Musique salle de bain",
