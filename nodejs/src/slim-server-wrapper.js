@@ -246,6 +246,14 @@ var getInfoAboutSong = function (idPlayer) {
         return slimRequest(slimParams);
     }).then(function (durationResult) {
         song.duration = durationResult._duration;
+        slimParams = [idPlayer, ['remote', '?']];
+        return slimRequest(slimParams);
+    }).then(function(remoteResult) {
+        song.isRemote = (remoteResult._remote == 1);
+        slimParams = [idPlayer, ['path', '?']];
+        return slimRequest(slimParams);
+    }).then(function(pathResult) {
+        song.path = pathResult._path;
         deferred.resolve(song);
     }).catch(function (err) {
         console.log("Error catched slimserver getInfoAboutSong : " + err);

@@ -42,6 +42,8 @@ var getPlayStatus = function (player) {
         playStatus.song_currently_playing.artist = song.artist;
         playStatus.song_currently_playing.album = song.album;
         playStatus.song_currently_playing.title = song.title;
+        playStatus.song_currently_playing.is_remote = song.isRemote;
+        playStatus.song_currently_playing.path = song.path;
         deferred.resolve(playStatus);
     }).catch(function (err) {
         console.log("Error on getPlayStatus / player-status : " + err);

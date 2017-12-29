@@ -49,7 +49,9 @@ Endpoint that you can use :
             "duration": "258.466",
             "artist": "The Smashing Pumpkins",
             "album": "Mellon Collie and the Infinite Sadness (2012 - Remaster)",
-            "title": "Bullet With Butterfly Wings"
+            "title": "Bullet With Butterfly Wings",
+            "is_remote": true,
+            "path": "spotify://track:4qMzPtAZe0C9KWpWIzvZAP"
         }
     }
 }
