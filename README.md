@@ -4,6 +4,11 @@ This REST API is a translation of the slimserver / logitech squeezebox server JS
 For now, you can find a nodeJS version on nodejs directory.
 For this version, notice on package.json the start script. Usualy, the squeezebox server is 9000, not 2311. I don't use the default port (9000) for my server, just for security reason.
 
+For the nodejs version, notice a file (token.js) is not shared on github. You have to create this file which must be contains the variable "token" with a password that you will add on every http request with the query param "token" (like GET /players?token=toto) :
+```
+exports.token = "what-a-token";
+```
+
 Endpoint that you can use :
 - GET /players : get players informations. The array returned looks like :
 ```

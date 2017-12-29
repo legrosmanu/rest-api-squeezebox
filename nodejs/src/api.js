@@ -1,10 +1,11 @@
 var PlayersDAO = require('./players');
 var PlayerDAO = require('./player');
 var Q = require("q");
+var Security = require('./token');
 
 exports.setEndPoints = function (app) {
 
-    app.get('/players', function (req, res) {
+    app.get('/players', requireAuthentication, function (req, res) {
         PlayersDAO.getAllPlayers().then(function (players) {
             res.send(players);
         }, function (error) {
@@ -15,7 +16,7 @@ exports.setEndPoints = function (app) {
         });
     });
 
-    app.get('/players/:uuid', function (req, res) {
+    app.get('/players/:uuid', requireAuthentication, function (req, res) {
         PlayerDAO.getPlayer(req.params.uuid).then(function (player) {
             if (player === null) {
                 res.sendStatus(404);
@@ -30,15 +31,15 @@ exports.setEndPoints = function (app) {
         });
     });
 
-    app.patch('/players/:uuid', function (req, res) {
+    app.patch('/players/:uuid', requireAuthentication, function (req, res) {
         if (req.body.play_state !== undefined) {
-            Q.fcall(function() {
+            Q.fcall(function () {
                 return PlayerDAO.getPlayer(req.params.uuid);
-            }).then(function(player) {
+            }).then(function (player) {
                 return PlayerDAO.setPlayState(player, req.body.play_state);
-            }).then(function() {
+            }).then(function () {
                 res.sendStatus(204);
-            }).catch(function(err) {
+            }).catch(function (err) {
                 res.status(500).send({
                     'error': err,
                     'message': 'Ooopppsss. There is a problem with the patch.'
@@ -46,10 +47,19 @@ exports.setEndPoints = function (app) {
             });
         } else {
             res.status(400).send({
-                'error' : 400,
-                'message' : 'Error to patch the player. Operation proposed only to patch play_state.'
+                'error': 400,
+                'message': 'Error to patch the player. Operation proposed only to patch play_state.'
             });
         }
     });
 
+};
+
+// Simple security - just check a token.
+var requireAuthentication = function (req, res, next) {
+    if (req.query.token == Security.token) {
+        next();
+    } else {
+        res.sendStatus(403);
+    }
 };
