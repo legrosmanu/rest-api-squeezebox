@@ -76,9 +76,9 @@ var getPlayer = function (uuid) {
             return playerStatus.getMixer(player);
         }).then(function (mixer) {
             player.mixer = mixer;
-            return playerStatus.getReadStatus(player);
-        }).then(function (readStatus) {
-            player.read_status = readStatus;
+            return playerStatus.getPlayStatus(player);
+        }).then(function (playStatus) {
+            player.play_status = playStatus;
             deferred.resolve(player);
         }).catch(function (error) {
             console.log("Error getPlayer : " + errorerr);

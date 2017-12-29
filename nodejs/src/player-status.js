@@ -25,30 +25,30 @@ var getMixer = function (player) {
     return deferred.promise;
 };
 
-var getReadStatus = function (player) {
+var getPlayStatus = function (player) {
     var deferred = Q.defer();
-    var readStatus = {};
+    var playStatus = {};
     Q.fcall(function () {
-        return slimServer.getReadMode(player.id);
+        return slimServer.getPlayMode(player.id);
     }).then(function (mode) {
-        readStatus.state = mode;
-        readStatus.song_currently_playing = {};
-        return slimServer.getSecondsRead(player.id);
+        playStatus.state = mode;
+        playStatus.song_currently_playing = {};
+        return slimServer.getSecondsPlayed(player.id);
     }).then(function (seconds) {
-        readStatus.song_currently_playing.seconds_read = seconds;
+        playStatus.song_currently_playing.seconds_played = seconds;
         return slimServer.getInfoAboutSong(player.id);
     }).then(function (song) {
-        readStatus.song_currently_playing.duration = song.duration;
-        readStatus.song_currently_playing.artist = song.artist;
-        readStatus.song_currently_playing.album = song.album;
-        readStatus.song_currently_playing.title = song.title;
-        deferred.resolve(readStatus);
+        playStatus.song_currently_playing.duration = song.duration;
+        playStatus.song_currently_playing.artist = song.artist;
+        playStatus.song_currently_playing.album = song.album;
+        playStatus.song_currently_playing.title = song.title;
+        deferred.resolve(playStatus);
     }).catch(function (err) {
-        console.log("Error on getReadStatus / player-status : " + err);
+        console.log("Error on getPlayStatus / player-status : " + err);
         deferred.reject(err);
     });
     return deferred.promise;
 };
 
 exports.getMixer = getMixer;
-exports.getReadStatus = getReadStatus;
+exports.getPlayStatus = getPlayStatus;

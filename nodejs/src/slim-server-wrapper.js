@@ -180,7 +180,7 @@ var getSignalStrength = function (idPlayer) {
     return deferred.promise;
 };
 
-var getReadMode = function (idPlayer) {
+var getPlayMode = function (idPlayer) {
     var deferred = Q.defer();
     try {
         var slimParams = [idPlayer, ['mode', '?']];
@@ -194,13 +194,13 @@ var getReadMode = function (idPlayer) {
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched slimserver getReadMode : " + err);
+        console.log("Error catched slimserver getPlayMode : " + err);
         deferred.reject(err);
     }
     return deferred.promise;
 };
 
-var getSecondsRead = function (idPlayer) {
+var getSecondsPlayed = function (idPlayer) {
     var deferred = Q.defer();
     try {
         var slimParams = [idPlayer, ['time', '?']];
@@ -214,7 +214,7 @@ var getSecondsRead = function (idPlayer) {
             deferred.reject(error);
         });
     } catch (err) {
-        console.log("Error catched slimserver getSecondsRead : " + err);
+        console.log("Error catched slimserver getSecondsPlayed : " + err);
         deferred.reject(err);
     }
     return deferred.promise;
@@ -263,6 +263,6 @@ exports.getBass = getBass;
 exports.getTreble = getTreble;
 exports.getPower = getPower;
 exports.getSignalStrength = getSignalStrength;
-exports.getReadMode = getReadMode;
-exports.getSecondsRead = getSecondsRead;
+exports.getPlayMode = getPlayMode;
+exports.getSecondsPlayed = getSecondsPlayed;
 exports.getInfoAboutSong = getInfoAboutSong;
