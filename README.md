@@ -54,3 +54,10 @@ Endpoint that you can use :
     }
 }
 ```
+- PATCH /players/{uuid} to only change the value of play_state for a player object. So the body of the request has to be something like :
+```
+{
+	"play_state": "play" // can be play, pause or stop
+}
+```
+If you change the value of play_state of you player, it will play or stop the music on your player.

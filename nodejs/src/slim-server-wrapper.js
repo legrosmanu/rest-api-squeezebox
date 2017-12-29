@@ -165,7 +165,7 @@ var getInfoAboutSong = function (idPlayer) {
     var song = {};
     var slimParams;
     Q.fcall(function () {
-        var slimParams = [idPlayer, ['time', '?']];
+        slimParams = [idPlayer, ['time', '?']];
         return slimRequest(slimParams);
     }).then(function (timeResult) {
         song.secondsPlayed = timeResult._time;
@@ -205,6 +205,19 @@ var getInfoAboutSong = function (idPlayer) {
     return deferred.promise;
 };
 
+var setPlayState = function(idPlayer, newValue) {
+    var deferred = Q.defer();
+    var song = {};
+    var slimParams = [idPlayer, ['mode', newValue]];
+    slimRequest(slimParams).then(function(result) {
+        deferred.resolve(result);
+    }, function(err) {
+        console.log("Error slimserver setPlayState : " + err);
+        deferred.reject(err);
+    });
+    return deferred.promise;
+};
+
 exports.setUrl = setUrl;
 exports.slimRequest = slimRequest;
 exports.getNbPlayers = getNbPlayers;
@@ -216,3 +229,4 @@ exports.getPower = getPower;
 exports.getSignalStrength = getSignalStrength;
 exports.getPlayMode = getPlayMode;
 exports.getInfoAboutSong = getInfoAboutSong;
+exports.setPlayState = setPlayState;

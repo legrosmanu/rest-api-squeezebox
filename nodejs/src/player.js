@@ -41,6 +41,28 @@ var getPlayer = function (uuid) {
     return deferred.promise;
 };
 
+var setPlayState = function (player, newValue) {
+    var deferred = Q.defer();
+    if (newValue === "stop" || newValue === "pause" || newValue === "play") {
+        SlimServer.setPlayState(player.id, newValue).then(function(result) {
+            deferred.resolve(newValue);
+        }, function(err) {
+            var error = {
+                error : 500,
+                message : err
+            };
+            deferred.reject(error);
+        });
+    } else {
+        var error = {
+            error : 400,
+            message : 'The value ' + newValue + ' is not accepted.'
+        };
+        deferred.reject(error);
+    }
+    return deferred.promise;
+};
+
 /******************************
  * Private function
  * 
@@ -95,3 +117,4 @@ var getSongPlaying = function (player) {
 };
 
 exports.getPlayer = getPlayer;
+exports.setPlayState = setPlayState;
