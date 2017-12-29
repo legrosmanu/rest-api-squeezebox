@@ -44,7 +44,7 @@ Endpoint that you can use :
     },
     "read_status": {
         "state": "play",
-        "song_playing": {
+        "song_currently_playing": {
             "seconds_read": 109.401973989487,
             "duration": "386.493",
             "artist": "Metallica",
