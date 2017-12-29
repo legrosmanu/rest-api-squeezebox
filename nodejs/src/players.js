@@ -1,6 +1,5 @@
 var slimServer = require('./slim-server-wrapper');
 var Q = require("q");
-var playerStatus = require('./player-status');
 
 var getNbPlayers = function () {
     var deferred = Q.defer();
@@ -29,11 +28,10 @@ var getAllPlayers = function () {
 };
 
 var getPlayers = function (numberPlayers) {
-
     var deferred = Q.defer();
-
+    var players = null;
     slimServer.getPlayers(numberPlayers).then(function (playersLoop) {
-        var players = [];
+        players = [];
         playersLoop.forEach(function (item) {
             var player = {
                 name: item.name,
@@ -54,44 +52,6 @@ var getPlayers = function (numberPlayers) {
 
 };
 
-var getPlayer = function (uuid) {
-    var deferred = Q.defer();
-    var player = null;
-    try {
-        Q.fcall(function () {
-            return getAllPlayers();
-        }).then(function (players) {
-            for (var i = 0; i < players.length && player === null; i++) {
-                if (players[i].uuid === uuid) {
-                    player = players[i];
-                }
-            }
-            if (player !== null) {
-                return slimServer.getSignalStrength(player.id);
-            } else {
-                deferred.reject("player is null");
-            }
-        }).then(function (signalStrength) {
-            player.signal_strength = signalStrength;
-            return playerStatus.getMixer(player);
-        }).then(function (mixer) {
-            player.mixer = mixer;
-            return playerStatus.getPlayStatus(player);
-        }).then(function (playStatus) {
-            player.play_status = playStatus;
-            deferred.resolve(player);
-        }).catch(function (error) {
-            console.log("Error getPlayer : " + errorerr);
-            deferred.reject(error);
-        });
-    } catch (err) {
-        console.log("Error catched getPlayer : " + err);
-        deferred.reject(err);
-    }
-    return deferred.promise;
-};
-
 exports.getNbPlayers = getNbPlayers;
 exports.getAllPlayers = getAllPlayers;
 exports.getPlayers = getPlayers;
-exports.getPlayer = getPlayer;

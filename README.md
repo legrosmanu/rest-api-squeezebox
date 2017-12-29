@@ -42,17 +42,15 @@ Endpoint that you can use :
         "treble": "50",
         "power": "on"
     },
-    "play_status": {
-        "state": "pause",
-        "song_currently_playing": {
-            "seconds_played": 183.890504037857,
-            "duration": "258.466",
-            "artist": "The Smashing Pumpkins",
-            "album": "Mellon Collie and the Infinite Sadness (2012 - Remaster)",
-            "title": "Bullet With Butterfly Wings",
-            "is_remote": true,
-            "path": "spotify://track:4qMzPtAZe0C9KWpWIzvZAP"
-        }
+    "play_state": "pause",
+    "song_currently_playing": {
+        "seconds_played": 183.890504037857,
+        "duration": "258.466",
+        "artist": "The Smashing Pumpkins",
+        "album": "Mellon Collie and the Infinite Sadness (2012 - Remaster)",
+        "title": "Bullet With Butterfly Wings",
+        "is_remote": true,
+        "path": "spotify://track:4qMzPtAZe0C9KWpWIzvZAP"
     }
 }
 ```

@@ -1,10 +1,11 @@
-var playersDAO = require('./players');
+var PlayersDAO = require('./players');
+var PlayerDAO = require('./player');
 var Q = require("q");
 
 exports.setEndPoints = function (app) {
 
     app.get('/players', function (req, res) {
-        playersDAO.getAllPlayers().then(function (players) {
+        PlayersDAO.getAllPlayers().then(function (players) {
             res.send(players);
         }, function (error) {
             res.status(500).send({
@@ -15,7 +16,7 @@ exports.setEndPoints = function (app) {
     });
 
     app.get('/players/:uuid', function(req, res) {
-        playersDAO.getPlayer(req.params.uuid).then(function(player) {
+        PlayerDAO.getPlayer(req.params.uuid).then(function(player) {
             if (player === null) {
                 res.sendStatus(404);
             } else {
