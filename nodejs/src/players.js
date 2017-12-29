@@ -1,6 +1,6 @@
 var slimServer = require('./slim-server-wrapper');
 var Q = require("q");
-
+var playerStatus = require('./player-status');
 
 var getNbPlayers = function () {
     var deferred = Q.defer();
@@ -18,12 +18,12 @@ var getAllPlayers = function () {
     Q.fcall(function () {
         return getNbPlayers();
     }).then(function (nbPlayers) {
-        getPlayers(nbPlayers).then(function (players) {
-            deferred.resolve(players);
-        }, function (error) {
-            console.log("Error getAllPlayers : " + error);
-            deferred.reject(error);
-        });
+        return getPlayers(nbPlayers);
+    }).then(function (players) {
+        deferred.resolve(players);
+    }).catch(function (err) {
+        console.log("Error getAllPlayers : " + err);
+        deferred.reject(err);
     });
     return deferred.promise;
 };
@@ -56,79 +56,38 @@ var getPlayers = function (numberPlayers) {
 
 var getPlayer = function (uuid) {
     var deferred = Q.defer();
+    var player = null;
     try {
         Q.fcall(function () {
             return getAllPlayers();
         }).then(function (players) {
-            var player = null;
             for (var i = 0; i < players.length && player === null; i++) {
                 if (players[i].uuid === uuid) {
                     player = players[i];
                 }
             }
             if (player !== null) {
-                player.mixer = {};
-                return addVolumeToPlayer(player);
+                return slimServer.getSignalStrength(player.id);
             } else {
                 deferred.reject("player is null");
             }
-        }).then(function (player) {
-            return addBassToPlayer(player);
-        }).then(function (player) {
-            return addTrebleToPlayer(player);
-        }).then(function (player) {
-            return addPowerToPlayer(player);
-        }).then(function (player) {
+        }).then(function (signalStrength) {
+            player.signal_strength = signalStrength;
+            return playerStatus.getMixer(player);
+        }).then(function (mixer) {
+            player.mixer = mixer;
+            return playerStatus.getReadStatus(player);
+        }).then(function (readStatus) {
+            player.read_status = readStatus;
             deferred.resolve(player);
+        }).catch(function (error) {
+            console.log("Error getPlayer : " + errorerr);
+            deferred.reject(error);
         });
     } catch (err) {
         console.log("Error catched getPlayer : " + err);
         deferred.reject(err);
     }
-    return deferred.promise;
-};
-
-var addVolumeToPlayer = function (player) {
-    var deferred = Q.defer();
-    slimServer.getVolume(player.id).then(function (volume) {
-        player.mixer.volume = volume;
-        deferred.resolve(player);
-    }, function (error) {
-        deferred.reject(error);
-    });
-    return deferred.promise;
-};
-
-var addBassToPlayer = function (player) {
-    var deferred = Q.defer();
-    slimServer.getBass(player.id).then(function (bass) {
-        player.mixer.bass = bass;
-        deferred.resolve(player);
-    }, function (error) {
-        deferred.reject(error);
-    });
-    return deferred.promise;
-};
-
-var addTrebleToPlayer = function (player) {
-    var deferred = Q.defer();
-    slimServer.getTreble(player.id).then(function (treble) {
-        player.mixer.treble = treble;
-        deferred.resolve(player);
-    }, function (error) {
-        deferred.reject(error);
-    });
-    return deferred.promise;
-};
-
-var addPowerToPlayer = function (player) {
-    var deferred = Q.defer();
-    slimServer.getPower(player.id).then(function (power) {
-        player.power = power;
-        deferred.resolve(player);
-    }, function (error) {
-        deferred.reject(error);
-    });
     return deferred.promise;
 };
 

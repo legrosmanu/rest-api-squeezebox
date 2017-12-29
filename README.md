@@ -35,10 +35,22 @@ Endpoint that you can use :
     "ip": "192.168.*.*:*****",
     "model": "Squeezebox Radio",
     "firmware_version": "7.7.3-r16676",
+    "signal_strength": 88,
     "mixer": {
         "volume": "42",
         "bass": "50",
-        "treble": "50"
+        "treble": "50",
+        "power": "on"
+    },
+    "read_status": {
+        "state": "play",
+        "song_playing": {
+            "seconds_read": 109.401973989487,
+            "duration": "386.493",
+            "artist": "Metallica",
+            "album": "Metallica",
+            "title": "The Unforgiven"
+        }
     }
 }
 ```
