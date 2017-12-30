@@ -1,16 +1,23 @@
 # rest-api-squeezebox
-This REST API is a translation of the slimserver / logitech squeezebox server JSON RPC API.
 
-For now, you can find a nodeJS version on nodejs directory.
-For this version, notice on package.json the start script. Usualy, the squeezebox server is 9000, not 2311. I don't use the default port (9000) for my server, just for security reason.
+## Abstract
+This REST API, which runs on nodejs, is a translation of the slimserver / logitech squeezebox server Web RPC API.
 
-For the nodejs version, notice a file (token.js) is not shared on github. You have to create this file which must contain the variable "token". It is used like a password. You will add it on every http request with the query param "token" (like GET /players?token=toto). So the file token.js is like :
+## Notice
+To install, just run "npm install".
+To launch the API, run "npm start" in the same directory than package.json.
+But, it is very possible you have to change the "script" in your case.
+In fact, notice on package.json the start script is "node src/index.js 192.168.1.12:2311 2312". Usualy, the squeezebox server is 9000, not 2311, and your squeezebox sever is certainly not on 192.168.1.12.
+Personnaly, I don't use the default port (9000) for my server, just for security reason.
+2312 on the command line means that the API will be accessible on the 2312 port. Of course, you can change it for 8080.
+
+Notice too a file (token.js) is not shared on github. You have to create this file which must contain the variable "token". It is used like a password. You will add it on every http request with the query param "token" (like GET /players?token=toto). So the file token.js is like :
 ```
 exports.token = "what-a-token";
 ```
 It's not a good solution for security. It is just for waiting for a better solution.
 
-Endpoint that you can use :
+## Endpoint that you can use
 - GET /players : get players informations. The array returned looks like :
 ```
 [
