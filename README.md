@@ -14,7 +14,7 @@ Personnaly, I don't use the default port (9000) for my server, just for security
 
 2312 on the command line means that the API will be accessible on the 2312 port. Of course, you can change it for 8080.
 
-Notice too a file (token.js) is not shared on github. You have to create this file which must contain the variable "token". It is used like a password. You will add it on every http request with the query param "token" (like GET /players?token=toto). So the file token.js is like :
+Notice too a file (src/api/token.js) is not shared on github. You have to create this file which must contain the variable "token". It is used like a password. You will add it on every http request with the query param "token" (like GET /players?token=toto). So the file token.js is like :
 ```
 exports.token = "what-a-token";
 ```
