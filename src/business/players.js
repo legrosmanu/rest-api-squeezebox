@@ -1,12 +1,11 @@
-var slimServer = require('./slim-server-wrapper');
 var Q = require("q");
+var SlimServerPlayers = require('../slim-server-wrapper/players');
 
 var getNbPlayers = function () {
     var deferred = Q.defer();
-    slimServer.getNbPlayers().then(function (nbPlayers) {
+    SlimServerPlayers.getNbPlayers().then(function (nbPlayers) {
         deferred.resolve(nbPlayers);
     }, function (error) {
-        console.log("Error getNbPlayers : " + error);
         deferred.reject(error);
     });
     return deferred.promise;
@@ -20,9 +19,8 @@ var getAllPlayers = function () {
         return getPlayers(nbPlayers);
     }).then(function (players) {
         deferred.resolve(players);
-    }).catch(function (err) {
-        console.log("Error getAllPlayers : " + err);
-        deferred.reject(err);
+    }).catch(function (error) {
+        deferred.reject(error);
     });
     return deferred.promise;
 };
@@ -30,7 +28,7 @@ var getAllPlayers = function () {
 var getPlayers = function (numberPlayers) {
     var deferred = Q.defer();
     var players = null;
-    slimServer.getPlayers(numberPlayers).then(function (playersLoop) {
+    SlimServerPlayers.getPlayers(numberPlayers).then(function (playersLoop) {
         players = [];
         playersLoop.forEach(function (item) {
             var player = {

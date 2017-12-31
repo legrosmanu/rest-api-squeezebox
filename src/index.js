@@ -2,8 +2,8 @@ var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
 
-var SlimServer = require('./slim-server-wrapper');
-var API = require('./api');
+var SlimServer = require('./slim-server-wrapper/slim-request');
+var PlayersAPI = require('./api/players');
 
 var app = express();
 
@@ -16,7 +16,7 @@ if (process.argv.length < 4) {
 
 SlimServer.setUrl(process.argv[2]);
 
-API.setEndPoints(app);
+PlayersAPI.setEndPoints(app);
 
 var port = process.env.PORT || process.argv[3];
 http.createServer(app).listen(port);

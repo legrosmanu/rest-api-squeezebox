@@ -1,12 +1,12 @@
-var PlayersDAO = require('./players');
-var PlayerDAO = require('./player');
+var Players = require('../business/players');
+var Player = require('../business/player');
 var Q = require("q");
 var Security = require('./token');
 
 exports.setEndPoints = function (app) {
 
     app.get('/players', requireAuthentication, function (req, res) {
-        PlayersDAO.getAllPlayers().then(function (players) {
+        Players.getAllPlayers().then(function (players) {
             res.send(players);
         }, function (error) {
             res.status(500).send({
@@ -17,7 +17,7 @@ exports.setEndPoints = function (app) {
     });
 
     app.get('/players/:uuid', requireAuthentication, function (req, res) {
-        PlayerDAO.getPlayer(req.params.uuid).then(function (player) {
+        Player.getPlayer(req.params.uuid).then(function (player) {
             if (player === null) {
                 res.sendStatus(404);
             } else {
@@ -34,9 +34,9 @@ exports.setEndPoints = function (app) {
     app.patch('/players/:uuid', requireAuthentication, function (req, res) {
         if (req.body.play_state !== undefined) {
             Q.fcall(function () {
-                return PlayerDAO.getPlayer(req.params.uuid);
+                return Player.getPlayer(req.params.uuid);
             }).then(function (player) {
-                return PlayerDAO.setPlayState(player, req.body.play_state);
+                return Player.setPlayState(player, req.body.play_state);
             }).then(function () {
                 res.sendStatus(204);
             }).catch(function (err) {

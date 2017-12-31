@@ -1,5 +1,7 @@
-var SlimServer = require('./slim-server-wrapper');
 var Q = require("q");
+var SlimServerPlayerMixer = require('../slim-server-wrapper/player/mixer');
+var SlimServerPlayerState = require('../slim-server-wrapper/player/play-state');
+var SlimServerSongPlaying = require('../slim-server-wrapper/player/song-playing');
 var Players = require('./players');
 
 var getPlayer = function (uuid) {
@@ -20,16 +22,16 @@ var getPlayer = function (uuid) {
         if (player === null) {
             deferred.resolve(null);
         } else {
-            return SlimServer.getSignalStrength(player.id);
+            return SlimServerPlayerMixer.getSignalStrength(player.id);
         }
     }).then(function (signalStrength) {
         player.signal_strength = signalStrength;
         return getMixer(player);
     }).then(function (mixer) {
         player.mixer = mixer;
-        return SlimServer.getPlayMode(player.id);
-    }).then(function (mode) {
-        player.play_state = mode;
+        return SlimServerPlayerState.getPlayState(player.id);
+    }).then(function (state) {
+        player.play_state = state;
         return getSongPlaying(player);
     }).then(function (song) {
         player.song_currently_playing = song;
@@ -44,7 +46,7 @@ var getPlayer = function (uuid) {
 var setPlayState = function (player, newValue) {
     var deferred = Q.defer();
     if (newValue === "stop" || newValue === "pause" || newValue === "play") {
-        SlimServer.setPlayState(player.id, newValue).then(function(result) {
+        SlimServerPlayerState.setPlayState(player.id, newValue).then(function() {
             deferred.resolve(newValue);
         }, function(err) {
             var error = {
@@ -72,21 +74,21 @@ var getMixer = function (player) {
     var deferred = Q.defer();
     var mixer = {};
     Q.fcall(function () {
-        return SlimServer.getVolume(player.id);
+        return SlimServerPlayerMixer.getVolume(player.id);
     }).then(function (volume) {
         mixer.volume = volume;
-        return SlimServer.getBass(player.id);
+        return SlimServerPlayerMixer.getBass(player.id);
     }).then(function (bass) {
         mixer.bass = bass;
-        return SlimServer.getTreble(player.id);
+        return SlimServerPlayerMixer.getTreble(player.id);
     }).then(function (treble) {
         mixer.treble = treble;
-        return SlimServer.getPower(player.id);
+        return SlimServerPlayerMixer.getPower(player.id);
     }).then(function (power) {
         mixer.power = power;
         deferred.resolve(mixer);
     }).catch(function (err) {
-        console.log("Error catched getMixer : " + err);
+        console.log("Error getMixer : " + err);
         deferred.reject(err);
     });
     return deferred.promise;
@@ -95,7 +97,7 @@ var getMixer = function (player) {
 var getSongPlaying = function (player) {
     var deferred = Q.defer();
     var songCurrentlyPlaying = {};
-    SlimServer.getInfoAboutSong(player.id).then(function (song) {
+    SlimServerSongPlaying.getInfoAboutSong(player.id).then(function (song) {
         try {
             songCurrentlyPlaying.seconds_played = song.secondsPlayed;
             songCurrentlyPlaying.duration = song.duration;
