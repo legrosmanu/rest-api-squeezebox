@@ -78,7 +78,7 @@ It's not a good solution for security. It is just for waiting for a better solut
 ```
 If you change the value of play_state of you player, it will play or stop the music on your player.
 
-- PATH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
+- PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
 ```
 {
     "power": "off"
