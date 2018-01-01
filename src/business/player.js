@@ -49,17 +49,34 @@ var setPlayState = function (player, newValue) {
         SlimServerPlayerState.setPlayState(player.id, newValue).then(function() {
             deferred.resolve(newValue);
         }, function(err) {
-            var error = {
+            deferred.reject({
                 error : 500,
                 message : err
-            };
-            deferred.reject(error);
+            });
         });
     } else {
-        var error = {
+        deferred.reject({
             error : 400,
             message : 'The value ' + newValue + ' is not accepted.'
-        };
+        });
+    }
+    return deferred.promise;
+};
+
+var updateMixer = function(player, newMixer) {
+    var deferred = Q.defer();
+    try {
+        SlimServerPlayerMixer.setVolume(player.id, newMixer.volume)
+        .then(SlimServerPlayerMixer.setBass(player.id, newMixer.bass))
+        .then(SlimServerPlayerMixer.setTreble(player.id, newMixer.treble))
+        .then(SlimServerPlayerMixer.setPower(player.id, newMixer.power))
+        .then(function() {
+            deferred.resolve({});
+        })
+        .fail(function(error) {
+            deferred.reject(error);
+        });
+    } catch (error) {
         deferred.reject(error);
     }
     return deferred.promise;
@@ -120,3 +137,4 @@ var getSongPlaying = function (player) {
 
 exports.getPlayer = getPlayer;
 exports.setPlayState = setPlayState;
+exports.updateMixer = updateMixer;

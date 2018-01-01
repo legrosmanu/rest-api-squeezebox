@@ -84,8 +84,69 @@ var getSignalStrength = function (idPlayer) {
     return deferred.promise;
 };
 
+var setVolume = function (idPlayer, newVolume) {
+    var deferred = Q.defer();
+    if (newVolume !== undefined) {
+        SlimRequest.slimRequest([idPlayer, ['mixer', 'volume', newVolume]]).then(function (result) {
+            deferred.resolve(result);
+        }, function (error) {
+            deferred.reject(error);
+        });
+    } else {
+        deferred.resolve(null);
+    }
+    return deferred.promise;
+};
+
+var setBass = function (idPlayer, newBass) {
+    var deferred = Q.defer();
+    if (newBass !== undefined) {
+        SlimRequest.slimRequest([idPlayer, ['mixer', 'bass', newBass]]).then(function (result) {
+            deferred.resolve(result);
+        }, function (error) {
+            deferred.reject(error);
+        });
+    } else {
+        deferred.resolve(null);
+    }
+    return deferred.promise;
+};
+
+var setTreble = function (idPlayer, newTreble) {
+    var deferred = Q.defer();
+    if (newTreble !== undefined) {
+        SlimRequest.slimRequest([idPlayer, ['mixer', 'treble', newTreble]]).then(function (result) {
+            deferred.resolve(result);
+        }, function (error) {
+            deferred.reject(error);
+        });
+    } else {
+        deferred.resolve(null);
+    }
+    return deferred.promise;
+};
+
+var setPower = function (idPlayer, newPower) {
+    var deferred = Q.defer();
+    if (newPower !== undefined) {
+        var newValueForPower = (newPower === "on") ? '1' : '0';
+        SlimRequest.slimRequest([idPlayer, ['power', newValueForPower]]).then(function (result) {
+            deferred.resolve(result);
+        }, function (error) {
+            deferred.reject(error);
+        });
+    } else {
+        deferred.resolve(null);
+    }
+    return deferred.promise;
+};
+
 exports.getPower = getPower;
 exports.getVolume = getVolume;
 exports.getBass = getBass;
 exports.getTreble = getTreble;
 exports.getSignalStrength = getSignalStrength;
+exports.setVolume = setVolume;
+exports.setBass = setBass;
+exports.setTreble = setTreble;
+exports.setPower = setPower;

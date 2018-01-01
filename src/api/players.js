@@ -53,6 +53,21 @@ exports.setEndPoints = function (app) {
         }
     });
 
+    app.patch('/players/:uuid/mixer', requireAuthentication, function (req, res) {
+        Q.fcall(function () {
+            return Player.getPlayer(req.params.uuid);
+        }).then(function (player) {
+            return Player.updateMixer(player, req.body);
+        }).then(function () {
+            res.sendStatus(204);
+        }).catch(function (err) {
+            res.status(500).send({
+                'error': err,
+                'message': 'Ooopppsss. There is a problem with the patch of the mixer.'
+            });
+        });
+    });
+
 };
 
 // Simple security - just check a token.
