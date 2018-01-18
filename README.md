@@ -2,6 +2,7 @@
 
 ## Abstract
 This REST API, which runs on nodejs, is a translation of the slimserver / logitech squeezebox server Web RPC API.
+Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests on IFTTT that I use with my google home mini.
 
 ## Notice
 To install, just run "npm install". 
@@ -21,7 +22,9 @@ exports.token = "what-a-token";
 It's not a good solution for security. It is just for waiting for a better solution.
 
 ## Endpoint that you can use
-- GET /players : get players informations. The array returned looks like :
+
+### GET /players
+Get players informations. The array returned looks like :
 ```
 [
     {
@@ -42,7 +45,9 @@ It's not a good solution for security. It is just for waiting for a better solut
     }
 ]
 ```
-- GET /players/{uuid} : get informations for one player. The object returned looks like : 
+
+### GET /players/{uuid}
+Get informations for one player. The object returned looks like : 
 ```
 {
     "name": "Musique salle de bain",
@@ -70,7 +75,9 @@ It's not a good solution for security. It is just for waiting for a better solut
     }
 }
 ```
-- PATCH /players/{uuid} to only change the value of play_state for a player object. So the body of the request has to be something like :
+
+### PATCH /players/{uuid}
+PATCH /players/{uuid} to only change the value of play_state for a player object. So the body of the request has to be something like :
 ```
 {
 	"play_state": "play" // can be play, pause or stop
@@ -78,7 +85,8 @@ It's not a good solution for security. It is just for waiting for a better solut
 ```
 If you change the value of play_state of you player, it will play or stop the music on your player.
 
-- PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
+### PATCH /players/{uuid}/mixer
+PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
 ```
 {
     "power": "off"
@@ -92,7 +100,8 @@ Or, if you want to change the volume :
 ```
 Refer to the GET /players/{uuid} to see what is the mixer object.
 
-- PATCH /players/{uuid}/playlist is to patch the playlist of tracks played. 
+### PATCH /players/{uuid}/playlist
+PATCH /players/{uuid}/playlist is to patch the playlist of tracks played. 
 For now, it's just to change the currently track played, so you just can send the oject :
 ```
 {
