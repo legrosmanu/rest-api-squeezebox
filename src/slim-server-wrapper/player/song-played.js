@@ -1,7 +1,7 @@
 var Q = require("q");
 var SlimRequest = require('../slim-request');
 
-// Informations about the song currently playing on the player
+// Informations about the song currently played on the player
 var getInfoAboutSong = function (idPlayer) {
     var deferred = Q.defer();
     var song = {};

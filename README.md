@@ -91,3 +91,17 @@ Or, if you want to change the volume :
 }
 ```
 Refer to the GET /players/{uuid} to see what is the mixer object.
+
+- PATCH /players/{uuid}/playlist is to patch the playlist of tracks played. 
+For now, it's just to change the currently track played, so you just can send the oject :
+```
+{
+    "index_track_played": "4" // 4 is the index on the playlist. The index starts at 0.
+}
+```
+Or, if you want to pass to the next song, just send : 
+```
+{
+    "index_track_played": "+1"
+}
+```
