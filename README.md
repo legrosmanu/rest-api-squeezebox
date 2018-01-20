@@ -2,7 +2,7 @@
 
 ## Abstract
 This REST API, which runs on nodejs, is a translation of the slimserver / logitech squeezebox server Web RPC API.
-Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests in IFTTT that I use with my google home mini.
+Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests in IFTTT that I use with my google home mini. I use it to say "Musique dans la salle" or "Chanson suivante" or "Volume à 75 dans la salle" and it does ;-)
 
 ## Notice
 To install, just run "npm install". 
@@ -23,7 +23,7 @@ It's not a good solution for security. It is just for waiting for a better solut
 
 ## Endpoint that you can use
 
-### GET /players
+### GET /players to know your players on your multi-room logitech squeezebox system
 Get players informations. The array returned looks like :
 ```
 [
@@ -46,7 +46,7 @@ Get players informations. The array returned looks like :
 ]
 ```
 
-### GET /players/{uuid}
+### GET /players/{uuid} hust to have the information to display
 Get informations for one player. The object returned looks like : 
 ```
 {
@@ -77,17 +77,18 @@ Get informations for one player. The object returned looks like :
 }
 ```
 
-### PATCH /players/{uuid}
-Actually, you just can change the value of play_state and the inde_on_playlist of the song_currently_played object. So the body of the request has to be something like :
+### PATCH /players/{uuid} to play or stop your music, or to change the song to play
+Actually, you just can change the value of play_state and the index_in_playlist of the song_currently_played object. So the body of the request could look like  :
 ```
 {
-	"play_state": "play", // can be play, pause or stop
+    "play_state": "play", // can be play, pause or stop
     "song_currently_played" : {
         "index_in_playlist" : 4
     }
 }
 ```
-If you change the value of play_state of you player, it will play or stop the music on your player. Notice that it's possible to change the song played for the next in playlist, if you send "+1" for song_currently_played.index_in_playlist.
+If you change the value of play_state of you player, it will play or stop the music on your player.
+Notice that it's possible to change the song played for the next in playlist, if you send "+1" for song_currently_played.index_in_playlist.
 
 ### PATCH /players/{uuid}/mixer
 PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
