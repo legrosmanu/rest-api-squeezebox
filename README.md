@@ -46,7 +46,7 @@ Get players informations. The array returned looks like :
 ]
 ```
 
-### GET /players/{uuid} hust to have the information to display
+### GET /players/{uuid} just to have the information to display
 Get informations for one player. The object returned looks like : 
 ```
 {
@@ -90,7 +90,7 @@ Actually, you just can change the value of play_state and the index_in_playlist 
 If you change the value of play_state of you player, it will play or stop the music on your player.
 Notice that it's possible to change the song played for the next in playlist, if you send "+1" for song_currently_played.index_in_playlist.
 
-### PATCH /players/{uuid}/mixer
+### PATCH /players/{uuid}/mixer to turn off a player ou just to change the volume
 PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
 ```
 {
