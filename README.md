@@ -2,7 +2,7 @@
 
 ## Abstract
 This REST API, which runs on nodejs, is a translation of the slimserver / logitech squeezebox server Web RPC API.
-Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests in IFTTT that I use with my google home mini. I use it to say "Musique dans la salle" or "Chanson suivante" or "Volume à 75 dans la salle" and it does ;-)
+Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests in IFTTT that I use with my google home mini. I use it to say "Musique dans la salle" or "Chanson suivante" or "Volume à 75 dans la salle" and it's fun ;-)
 
 ## Notice
 To install, just run "npm install". 
@@ -90,7 +90,7 @@ Actually, you just can change the value of play_state and the index_in_playlist 
 If you change the value of play_state of you player, it will play or stop the music on your player.
 Notice that it's possible to change the song played for the next in playlist, if you send "+1" for song_currently_played.index_in_playlist.
 
-### PATCH /players/{uuid}/mixer to turn off a player ou just to change the volume
+### PATCH /players/{uuid}/mixer to turn off or on a player ou just to change the volume
 PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
 ```
 {
