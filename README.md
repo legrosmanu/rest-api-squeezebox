@@ -2,7 +2,7 @@
 
 ## Abstract
 This REST API, which runs on nodejs, is a translation of the slimserver / logitech squeezebox server Web RPC API.
-Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests on IFTTT that I use with my google home mini.
+Why I do that ? Just beacause it'll be simpler to make mobile app, or actually for me it's to have nicer http requests in IFTTT that I use with my google home mini.
 
 ## Notice
 To install, just run "npm install". 
@@ -10,12 +10,12 @@ To launch the API, run "npm start".
 
 But, it is very possible you have to change the "script" in your case. 
 
-In fact, notice on package.json the start script is "node src/index.js 192.168.1.12:2311 2312". Usualy, the squeezebox server is 9000, not 2311, and your squeezebox sever is certainly not on 192.168.1.12.
+In fact, notice in package.json the start script is "node src/index.js 192.168.1.12:2311 2312". Usualy, the squeezebox server is 9000, not 2311, and your squeezebox sever is certainly not on 192.168.1.12.
 Personnaly, I don't use the default port (9000) for my server, just for security reason.
 
-2312 on the command line means that the API will be accessible on the 2312 port. Of course, you can change it for 8080.
+2312 in the command line means that the API will be accessible in the 2312 port. Of course, you can change it for 8080.
 
-Notice too a file (src/api/token.js) is not shared on github. You have to create this file which must contain the variable "token". It is used like a password. You will add it on every http request with the query param "token" (like GET /players?token=toto). So the file token.js is like :
+Notice too a file (src/api/token.js) is not shared on github. You have to create this file which must contain the variable "token". It is used like a password. You will add it in every http request with the query param "token" (like GET /players?token=toto). So the file token.js is like :
 ```
 exports.token = "what-a-token";
 ```
@@ -64,7 +64,8 @@ Get informations for one player. The object returned looks like :
         "power": "on"
     },
     "play_state": "pause",
-    "song_currently_playing": {
+    "song_currently_played": {
+        "index_in_playlist" : 3,
         "seconds_played": 183.890504037857,
         "duration": "258.466",
         "artist": "The Smashing Pumpkins",
@@ -77,13 +78,16 @@ Get informations for one player. The object returned looks like :
 ```
 
 ### PATCH /players/{uuid}
-PATCH /players/{uuid} to only change the value of play_state for a player object. So the body of the request has to be something like :
+Actually, you just can change the value of play_state and the inde_on_playlist of the song_currently_played object. So the body of the request has to be something like :
 ```
 {
-	"play_state": "play" // can be play, pause or stop
+	"play_state": "play", // can be play, pause or stop
+    "song_currently_played" : {
+        "index_in_playlist" : 4
+    }
 }
 ```
-If you change the value of play_state of you player, it will play or stop the music on your player.
+If you change the value of play_state of you player, it will play or stop the music on your player. Notice that it's possible to change the song played for the next in playlist, if you send "+1" for song_currently_played.index_in_playlist.
 
 ### PATCH /players/{uuid}/mixer
 PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
@@ -99,18 +103,3 @@ Or, if you want to change the volume :
 }
 ```
 Refer to the GET /players/{uuid} to see what is the mixer object.
-
-### PATCH /players/{uuid}/playlist
-PATCH /players/{uuid}/playlist is to patch the playlist of tracks played. 
-For now, it's just to change the currently track played, so you just can send the oject :
-```
-{
-    "index_track_played": "4" // 4 is the index on the playlist. The index starts at 0.
-}
-```
-Or, if you want to pass to the next song, just send : 
-```
-{
-    "index_track_played": "+1"
-}
-```

@@ -32,25 +32,22 @@ exports.setEndPoints = function (app) {
     });
 
     app.patch('/players/:uuid', requireAuthentication, function (req, res) {
-        if (req.body.play_state !== undefined) {
-            Q.fcall(function () {
-                return Player.getPlayer(req.params.uuid);
-            }).then(function (player) {
-                return Player.setPlayState(player, req.body.play_state);
-            }).then(function () {
-                res.sendStatus(204);
-            }).catch(function (err) {
-                res.status(500).send({
-                    'error': err,
-                    'message': 'Ooopppsss. There is a problem with the patch.'
-                });
+        var player = null;
+        Q.fcall(function () {
+            return Player.getPlayer(req.params.uuid);
+        }).then(function (playerFound) {
+            player = playerFound;
+            return Player.setPlayState(player, req.body.play_state);
+        }).then(function () {
+            return Player.changeTrackPlayed(player, req.body.song_currently_played);
+        }).then(function () {
+            res.sendStatus(204);
+        }).catch(function (err) {
+            res.status(500).send({
+                'error': err,
+                'message': 'Ooopppsss. There is a problem with the patch for your player.'
             });
-        } else {
-            res.status(400).send({
-                'error': 400,
-                'message': 'Error to patch the player. Operation proposed only to patch play_state.'
-            });
-        }
+        });
     });
 
     app.patch('/players/:uuid/mixer', requireAuthentication, function (req, res) {
@@ -64,23 +61,6 @@ exports.setEndPoints = function (app) {
             res.status(500).send({
                 'error': err,
                 'message': 'Ooopppsss. There is a problem with the patch of the mixer.'
-            });
-        });
-    });
-
-    app.patch('/players/:uuid/playlist', requireAuthentication, function(req, res) {
-        Q.fcall(function () {
-            return Player.getPlayer(req.params.uuid);
-        }).then(function(player) {
-            // For now, just to change the track which is currently played.
-            // So we wait the index_track_played attribute.
-            return Player.changeTrackPlayed(player, req.body.index_track_played);
-        }).then(function () {
-            res.sendStatus(204);
-        }).catch(function (err) {
-            res.status(500).send({
-                'error': err,
-                'message': 'Ooopppsss. There is a problem with the patch of the playlist.'
             });
         });
     });

@@ -33,9 +33,9 @@ var getPlayer = function (uuid) {
         return SlimServerPlayerState.getPlayState(player.id);
     }).then(function (state) {
         player.play_state = state;
-        return getSongPlaying(player);
+        return getSongPlayed(player);
     }).then(function (song) {
-        player.song_currently_playing = song;
+        player.song_currently_played = song;
         deferred.resolve(player);
     }).catch(function (error) {
         console.log("Error getPlayer : " + error);
@@ -44,7 +44,11 @@ var getPlayer = function (uuid) {
     return deferred.promise;
 };
 
+
 var setPlayState = function (player, newValue) {
+
+    if (newValue === undefined) return Q.when({});
+
     var deferred = Q.defer();
     if (newValue === "stop" || newValue === "pause" || newValue === "play") {
         SlimServerPlayerState.setPlayState(player.id, newValue).then(function () {
@@ -61,7 +65,15 @@ var setPlayState = function (player, newValue) {
             message: 'The value ' + newValue + ' is not accepted.'
         });
     }
+
     return deferred.promise;
+};
+
+var changeTrackPlayed = function (player, songCurrentlyPlayed) {
+    if (songCurrentlyPlayed === undefined || songCurrentlyPlayed.index_in_playlist === undefined) return Q.when({});
+    return SlimServerPlaylistOnPlayer.setTrackIndex(player.id, songCurrentlyPlayed.index_in_playlist).then(function () {
+        return {};
+    });
 };
 
 var updateMixer = function (player, newMixer) {
@@ -112,7 +124,7 @@ var getMixer = function (player) {
     return deferred.promise;
 };
 
-var getSongPlaying = function (player) {
+var getSongPlayed = function (player) {
     var deferred = Q.defer();
     var songCurrentlyPlayed = {};
     SlimServerSongPlayed.getInfoAboutSong(player.id).then(function (song) {
@@ -124,6 +136,7 @@ var getSongPlaying = function (player) {
             songCurrentlyPlayed.title = song.title;
             songCurrentlyPlayed.is_remote = song.isRemote;
             songCurrentlyPlayed.path = song.path;
+            songCurrentlyPlayed.index_in_playlist = song.indexInPlaylist;
             deferred.resolve(songCurrentlyPlayed);
         } catch (err) {
             console.log("Error on getSongPlaying / result for getInfoAboutSong : " + err);
@@ -133,25 +146,6 @@ var getSongPlaying = function (player) {
         console.log("Error on getSongPlaying : " + err);
         deferred.reject(err);
     });
-    return deferred.promise;
-};
-
-// indexTrackPlayed is the index on the playlist of the track currently played
-var changeTrackPlayed = function (player, indexTrackPlayed) {
-    var deferred = Q.defer();
-    if (indexTrackPlayed !== undefined) {
-        SlimServerPlaylistOnPlayer.setTrackIndex(player.id, indexTrackPlayed).then(function () {
-            deferred.resolve({});
-        }, function (err) {
-            console.log("Error on changeTrackPlayed : " + err);
-            deferred.reject(err);
-        });
-    } else {
-        deferred.reject({
-            error: 400,
-            message: 'indexTrackPlayed is undefined.'
-        });
-    }
     return deferred.promise;
 };
 

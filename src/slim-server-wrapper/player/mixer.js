@@ -68,7 +68,7 @@ var getTreble = function (idPlayer) {
 };
 
 // The wifi of the player is ok ?
-// Not reely on the mixer, but is on mixer.js for now.
+// Not realy in the mixer, but is in mixer.js for now.
 var getSignalStrength = function (idPlayer) {
     var deferred = Q.defer();
     var slimParams = [idPlayer, ['signalstrength', '?']];
@@ -85,60 +85,32 @@ var getSignalStrength = function (idPlayer) {
 };
 
 var setVolume = function (idPlayer, newVolume) {
-    var deferred = Q.defer();
-    if (newVolume !== undefined) {
-        SlimRequest.slimRequest([idPlayer, ['mixer', 'volume', newVolume]]).then(function (result) {
-            deferred.resolve(result);
-        }, function (error) {
-            deferred.reject(error);
-        });
-    } else {
-        deferred.resolve(null);
-    }
-    return deferred.promise;
+    if (newVolume === undefined) return Q.when(null);
+    return SlimRequest.slimRequest([idPlayer, ['mixer', 'volume', newVolume]]).then(function (result) {
+        return result;
+    });
 };
 
 var setBass = function (idPlayer, newBass) {
-    var deferred = Q.defer();
-    if (newBass !== undefined) {
-        SlimRequest.slimRequest([idPlayer, ['mixer', 'bass', newBass]]).then(function (result) {
-            deferred.resolve(result);
-        }, function (error) {
-            deferred.reject(error);
-        });
-    } else {
-        deferred.resolve(null);
-    }
-    return deferred.promise;
+    if (newBass === undefined) return Q.when(null);
+    return SlimRequest.slimRequest([idPlayer, ['mixer', 'bass', newBass]]).then(function (result) {
+        return result;
+    });
 };
 
 var setTreble = function (idPlayer, newTreble) {
-    var deferred = Q.defer();
-    if (newTreble !== undefined) {
-        SlimRequest.slimRequest([idPlayer, ['mixer', 'treble', newTreble]]).then(function (result) {
-            deferred.resolve(result);
-        }, function (error) {
-            deferred.reject(error);
-        });
-    } else {
-        deferred.resolve(null);
-    }
-    return deferred.promise;
+    if (newTreble === undefined) return Q.when(null);
+    return SlimRequest.slimRequest([idPlayer, ['mixer', 'treble', newTreble]]).then(function (result) {
+        return result;
+    });
 };
 
 var setPower = function (idPlayer, newPower) {
-    var deferred = Q.defer();
-    if (newPower !== undefined) {
-        var newValueForPower = (newPower === "on") ? '1' : '0';
-        SlimRequest.slimRequest([idPlayer, ['power', newValueForPower]]).then(function (result) {
-            deferred.resolve(result);
-        }, function (error) {
-            deferred.reject(error);
-        });
-    } else {
-        deferred.resolve(null);
-    }
-    return deferred.promise;
+    if (newPower === undefined) return Q.when(null);
+    var newValueForPower = (newPower === "on") ? '1' : '0';
+    return SlimRequest.slimRequest([idPlayer, ['power', newValueForPower]]).then(function (result) {
+        return result;
+    });
 };
 
 exports.getPower = getPower;

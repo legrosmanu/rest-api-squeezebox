@@ -1,5 +1,6 @@
 var Q = require("q");
 var SlimRequest = require('../slim-request');
+var SlimServerPlaylistOnPlayer = require('./playlist');
 
 // Informations about the song currently played on the player
 var getInfoAboutSong = function (idPlayer) {
@@ -39,6 +40,9 @@ var getInfoAboutSong = function (idPlayer) {
         return SlimRequest.slimRequest(slimParams);
     }).then(function (pathResult) {
         song.path = pathResult._path;
+        return SlimServerPlaylistOnPlayer.getTrackIndex(idPlayer);
+    }).then(function(indexInPlaylist) {
+        song.indexInPlaylist = indexInPlaylist;
         deferred.resolve(song);
     }).catch(function (error) {
         deferred.reject(error);
