@@ -28,20 +28,56 @@ Get players informations. The array returned looks like :
 ```
 [
     {
-        "name": "Musique salle de bain",
         "uuid": "********************************",
-        "id": "**:**:**:**:**:**",
-        "ip": "192.168.*.*:*****",
-        "model": "Squeezebox Radio",
-        "firmware_version": "7.7.3-r16676"
-    },
-    {
-        "name": "Salle ChachaManu",
-        "uuid": "********************************",
+        "name": "salle 1",
         "id": "**:**:**:**:**:**",
         "ip": "192.168.*.*:*****",
         "model": "Squeezebox Touch",
-        "firmware_version": "7.8.0-r16754"
+        "firmwareVersion": "7.8.0-r16754",
+        "signalStrength": 90,
+        "playState": "pause",
+        "mixer": {
+            "power": "on",
+            "volume": "50",
+            "bass": "50",
+            "treble": "50"
+        },
+        "songPlayed": {
+            "indexInPlaylist": "1",
+            "secondsPlayed": 27.2640468654633,
+            "duration": "210.546",
+            "artist": "Blue Öyster Cult",
+            "album": "Blue Oyster Cult",
+            "title": "Then Came the Last Days of May",
+            "isRemote": true,
+            "path": "spotify://track:60TYdVs6TWIsAJ1MPRdv59"
+        }
+    },
+    {
+        "uuid": "********************************",
+        "name": "salle 2",
+        "id": "**:**:**:**:**:**",
+        "ip": "192.168.*.*:*****",
+        "model": "Squeezebox Radio",
+        "firmwareVersion": "7.7.3-r16676",
+        "signalStrength": 63,
+        "playState": "stop",
+        "mixer": {
+            "power": "off",
+            "volume": "22",
+            "bass": "50",
+            "treble": "50"
+        },
+        "songPlayed": {
+            "indexInPlaylist": "1",
+            "secondsPlayed": 27.2640468654633,
+            "duration": "210.546",
+            "artist": "Blue Öyster Cult",
+            "album": "Blue Oyster Cult",
+            "title": "Then Came the Last Days of May",
+            "isRemote": true,
+            "path": "spotify://track:60TYdVs6TWIsAJ1MPRdv59"
+        }
     }
 ]
 ```
@@ -50,29 +86,29 @@ Get players informations. The array returned looks like :
 Get informations for one player. The object returned looks like : 
 ```
 {
-    "name": "Musique salle de bain",
     "uuid": "********************************",
+    "name": "salle 1",
     "id": "**:**:**:**:**:**",
     "ip": "192.168.*.*:*****",
-    "model": "Squeezebox Radio",
-    "firmware_version": "7.7.3-r16676",
-    "signal_strength": 88,
+    "model": "Squeezebox Touch",
+    "firmwareVersion": "7.8.0-r16754",
+    "signalStrength": 90,
+    "playState": "pause",
     "mixer": {
-        "volume": "42",
+        "power": "on",
+        "volume": "50",
         "bass": "50",
-        "treble": "50",
-        "power": "on"
+        "treble": "50"
     },
-    "play_state": "pause",
-    "song_currently_played": {
-        "index_in_playlist" : 3,
-        "seconds_played": 183.890504037857,
-        "duration": "258.466",
-        "artist": "The Smashing Pumpkins",
-        "album": "Mellon Collie and the Infinite Sadness (2012 - Remaster)",
-        "title": "Bullet With Butterfly Wings",
-        "is_remote": true,
-        "path": "spotify://track:4qMzPtAZe0C9KWpWIzvZAP"
+    "songPlayed": {
+        "indexInPlaylist": "1",
+        "secondsPlayed": 27.2640468654633,
+        "duration": "210.546",
+        "artist": "Blue Öyster Cult",
+        "album": "Blue Oyster Cult",
+        "title": "Then Came the Last Days of May",
+        "isRemote": true,
+        "path": "spotify://track:60TYdVs6TWIsAJ1MPRdv59"
     }
 }
 ```

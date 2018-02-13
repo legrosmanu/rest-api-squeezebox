@@ -1,45 +1,62 @@
 var Players = require('../business/players');
-var Player = require('../business/player');
+var PlayerOld = require('../business/player');
 var Q = require("q");
 var Security = require('./token');
+let SlimHelper = require('../slim-server-wrapper/SlimHelper');
+var Player = require('../integration/Player');
 
 exports.setEndPoints = function (app) {
 
-    app.get('/players', requireAuthentication, function (req, res) {
-        Players.getAllPlayers().then(function (players) {
+    // We have to check how much we have players to get all the players, 
+    // then get the players.
+    app.get('/players', requireAuthentication, async (req, res) => {
+        try {
+            const resultNbPlayers = await SlimHelper.sendRequest(['-', ['player', 'count', '?']]);
+            const resultPlayers = await SlimHelper.sendRequest(['-', ['players', '0', resultNbPlayers._count]]);
+            let players = resultPlayers.players_loop.map(playerFromSlim => new Player(playerFromSlim.uuid));
+            const initPlayerPromises = players.map(player => player.init());
+            await Promise.all(initPlayerPromises);
             res.send(players);
-        }, function (error) {
-            res.status(500).send({
-                'error': error,
-                'message': 'Error to get players.'
-            });
-        });
+        } catch (error) {
+            console.log("Error /players : " + error);
+            if (error.codeHttp) {
+                res.status(error.codeHttp).send(error.message);
+            } else {
+                res.status(500).send({
+                    'error': error,
+                    'message': 'Error to get players.'
+                });
+            }
+        }
     });
 
-    app.get('/players/:uuid', requireAuthentication, function (req, res) {
-        Player.getPlayer(req.params.uuid).then(function (player) {
-            if (player === null) {
-                res.sendStatus(404);
+    app.get('/players/:uuid', requireAuthentication, async (req, res) => {
+        try {
+            let player = new Player(req.params.uuid);
+            await player.init();
+            res.send(player);
+        } catch (error) {
+            console.log("Error /players/:uuid : " + error);
+            if (error.codeHttp) {
+                res.status(error.codeHttp).send(error.message);
             } else {
-                res.send(player);
+                res.status(500).send({
+                    'error': error,
+                    'message': 'Error to get player with uuid ' + req.params.uuid
+                });
             }
-        }, function (error) {
-            res.status(500).send({
-                'error': error,
-                'message': 'Error to get player with uuid ' + uuid
-            });
-        });
+        }
     });
 
     app.patch('/players/:uuid', requireAuthentication, function (req, res) {
         var player = null;
         Q.fcall(function () {
-            return Player.getPlayer(req.params.uuid);
+            return PlayerOld.getPlayer(req.params.uuid);
         }).then(function (playerFound) {
             player = playerFound;
-            return Player.setPlayState(player, req.body.play_state);
+            return PlayerOld.setPlayState(player, req.body.play_state);
         }).then(function () {
-            return Player.changeTrackPlayed(player, req.body.song_currently_played);
+            return PlayerOld.changeTrackPlayed(player, req.body.song_currently_played);
         }).then(function () {
             res.sendStatus(204);
         }).catch(function (err) {
@@ -52,9 +69,9 @@ exports.setEndPoints = function (app) {
 
     app.patch('/players/:uuid/mixer', requireAuthentication, function (req, res) {
         Q.fcall(function () {
-            return Player.getPlayer(req.params.uuid);
+            return PlayerOld.getPlayer(req.params.uuid);
         }).then(function (player) {
-            return Player.updateMixer(player, req.body);
+            return PlayerOld.updateMixer(player, req.body);
         }).then(function () {
             res.sendStatus(204);
         }).catch(function (err) {

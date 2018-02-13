@@ -16,6 +16,9 @@ if (process.argv.length < 4) {
 
 SlimServer.setUrl(process.argv[2]);
 
+let SlimHelper = require('./slim-server-wrapper/SlimHelper');
+SlimHelper.setUrl(process.argv[2]);
+
 PlayersAPI.setEndPoints(app);
 
 var port = process.env.PORT || process.argv[3];

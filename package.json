@@ -7,7 +7,7 @@
     "url": "https://github.com/legrosmanu/rest-api-squeezebox"
   },
   "scripts": {
-    "start": "node src/index.js 192.168.1.12:2311 2312"
+    "start": "node src/index.js 192.168.1.11:2311 2312"
   },
   "author": "Emmanuel LEGROS",
   "license": "Apache-2.0",
