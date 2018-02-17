@@ -19,4 +19,24 @@ module.exports = class Mixer {
         this.treble = data[3]._treble;
     }
 
+    async setPower(newPower) {
+        this.power = (newPower === "on") ? '1' : '0';
+        await SlimHelper.sendRequest([this.player.id, ['power', this.power]]);
+    }
+
+    async setVolume(newVolume) {
+        this.volume = newVolume;
+        await SlimHelper.sendRequest([this.player.id, ['mixer', 'volume', this.volume]]);
+    }
+
+    async setBass(newBass) {
+        this.bass = newBass;
+        await SlimHelper.sendRequest([this.player.id, ['mixer', 'bass', this.bass]]);
+    }
+
+    async setTreble(newTreble) {
+        this.treble = newTreble;
+        await SlimHelper.sendRequest([this.player.id, ['mixer', 'treble', this.treble]]);
+    }
+
 }

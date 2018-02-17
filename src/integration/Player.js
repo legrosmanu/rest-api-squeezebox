@@ -1,6 +1,6 @@
 let SlimHelper = require('../slim-server-wrapper/SlimHelper');
 let Mixer = require('./Mixer');
-let songPlayed = require('./SongPlayed');
+let SongPlayed = require('./SongPlayed');
 
 module.exports = class Player {
 
@@ -40,23 +40,16 @@ module.exports = class Player {
                 this.model = player.modelname;
                 this.firmwareVersion = player.firmware;
 
-                let mixer = new Mixer(this);
-                let songPlayedOnPlayer = new songPlayed(this);
+                this.mixer = new Mixer(this);
+                this.songPlayed = new SongPlayed(this);
                 const data = await Promise.all([
                     SlimHelper.sendRequest([this.id, ['signalstrength', '?']]),
                     SlimHelper.sendRequest([this.id, ['mode', '?']]),
-                    mixer.init(),
-                    songPlayedOnPlayer.init()
+                    this.mixer.init(),
+                    this.songPlayed.init()
                 ]);
                 this.signalStrength = data[0]._signalstrength;
                 this.playState = data[1]._mode;
-                this.mixer = {
-                    power: mixer.power,
-                    volume: mixer.volume,
-                    bass: mixer.bass,
-                    treble: mixer.treble
-                };
-                this.songPlayed = Object.assign({}, songPlayedOnPlayer, { player: undefined });
             }
 
         } catch (error) {
@@ -65,30 +58,69 @@ module.exports = class Player {
 
     }
 
+
+    getMixer() {
+        return this.mixer;
+    }
+
+    getSongPlayed() {
+        return this.songPlayed;
+    }
+
     // newState can be on or off
-    setPower(newState) {
-        // TODO
+    async setPower(newState) {
+        if (newState === "on" || newState === "off") {
+            await this.mixer.setPower(newState);
+        } else {
+            let error = {
+                codeHTTP: 400,
+                message: "the power for the player " + this.uuid + " has to be on or off"
+            };
+            throw error;
+        }
     }
 
-    // newState can be play, stop or off
-    setPlayState(newState) {
-        // TODO
+    // newState can be play, stop or pause
+    async setPlayState(newState) {
+        if (newState === "play" || newState === "stop" || newState === "pause") {
+            this.playState = newState;
+            await SlimHelper.sendRequest([this.id, ['mode', this.playState]]);
+        } else {
+            let error = {
+                codeHTTP: 400,
+                message: "the play state for the player " + this.uuid + " has to be play, stop or pause"
+            };
+            throw error;
+        }
     }
 
-    setMixer(newMixer) {
-        // TODO
-    }
-
-    nextTrack() {
-        // TODO
-    }
-
-    previousTrack() {
-        // TODO
-    }
-
-    setIndexSongPlayedOnPlaylist() {
-        // TODO
+    toAPI() {
+        return {
+            uuid: this.uuid,
+            name: this.name,
+            id: this.id,
+            ip: this.ip,
+            model: this.model,
+            firmware_version: this.firmwareVersion,
+            signal_strength: this.signalStrength,
+            play_state: this.playState,
+            mixer: {
+                power: this.mixer.power,
+                volume: this.mixer.volume,
+                bass: this.mixer.bass,
+                treble: this.mixer.treble
+            },
+            song_currently_played: {
+                index_in_playlist: this.songPlayed.indexInPlaylist,
+                seconds_played: this.songPlayed.secondsPlayed,
+                duration: this.songPlayed.duration,
+                artist: this.songPlayed.artist,
+                album: this.songPlayed.album,
+                title: this.songPlayed.title,
+                is_remote: this.songPlayed.isRemote,
+                path: this.songPlayed.path
+            }
+        };
     }
 
 }

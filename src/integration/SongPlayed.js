@@ -1,7 +1,7 @@
 let SlimHelper = require('../slim-server-wrapper/SlimHelper');
 
 module.exports = class SongPlayed {
-    
+
     constructor(player) {
         this.player = player;
     }
@@ -25,6 +25,21 @@ module.exports = class SongPlayed {
         this.title = data[5]._title;
         this.isRemote = (data[6]._remote) ? true : false;
         this.path = data[7]._path;
+    }
+
+    async setIndexSongPlayedOnPlaylist(newIndex) {
+        await SlimHelper.sendRequest([this.player.id, ['playlist', 'index', newIndex]]);
+    }
+
+
+    async nextTrack() {
+        await this.setIndexSongPlayedOnPlaylist(this.indexInPlaylist + 1);
+    }
+
+    async previousTrack() {
+        if (this.indexInPlaylist > 0) {
+            await this.setIndexSongPlayedOnPlaylist(this.indexInPlaylist - 1);
+        }
     }
 
 }
