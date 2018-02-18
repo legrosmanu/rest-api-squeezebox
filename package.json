@@ -1,6 +1,6 @@
 {
   "name": "rest-api-squeezebox",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "description": "This REST API is a translation of the slimserver / squeezebox server JSON RPC API.",
   "repository": {
     "type": "git",
@@ -13,7 +13,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "express": "^4.16.2",
-    "q": "^1.5.1",
     "request": "^2.83.0"
   }
 }

@@ -39,4 +39,13 @@ module.exports = class Mixer {
         await SlimHelper.sendRequest([this.player.id, ['mixer', 'treble', this.treble]]);
     }
 
+    toAPI() {
+        return {
+            power: this.power,
+            volume: this.volume,
+            bass: this.bass,
+            treble: this.treble
+        };
+    }
+
 }

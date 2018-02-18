@@ -42,4 +42,17 @@ module.exports = class SongPlayed {
         }
     }
 
+    toAPI() {
+        return {
+            index_in_playlist: this.indexInPlaylist,
+            seconds_played: this.secondsPlayed,
+            duration: this.duration,
+            artist: this.artist,
+            album: this.album,
+            title: this.title,
+            is_remote: this.isRemote,
+            path: this.path
+        };
+    }
+
 }
