@@ -39,6 +39,8 @@ module.exports = class SongPlayed {
     async previousTrack() {
         if (this.indexInPlaylist > 0) {
             await this.setIndexSongPlayedOnPlaylist(this.indexInPlaylist - 1);
+        } else {
+            await this.setIndexSongPlayedOnPlaylist(0);
         }
     }
 
