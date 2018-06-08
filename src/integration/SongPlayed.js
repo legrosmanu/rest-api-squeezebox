@@ -33,12 +33,12 @@ module.exports = class SongPlayed {
 
 
     async nextTrack() {
-        await this.setIndexSongPlayedOnPlaylist(this.indexInPlaylist + 1);
+        await SlimHelper.sendRequest([this.player.id, ['playlist', 'index', '+1']]);
     }
 
     async previousTrack() {
         if (this.indexInPlaylist > 0) {
-            await this.setIndexSongPlayedOnPlaylist(this.indexInPlaylist - 1);
+            await SlimHelper.sendRequest([this.player.id, ['playlist', 'index', '-1']]);
         } else {
             await this.setIndexSongPlayedOnPlaylist(0);
         }
