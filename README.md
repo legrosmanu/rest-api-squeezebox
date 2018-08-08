@@ -140,3 +140,27 @@ Or, if you want to change the volume :
 }
 ```
 Refer to the GET /players/{uuid} to see what is the mixer object.
+
+### PATCH /playser/{uuid}/playlist to change the playlist to play on the player
+You can change the playlist to play in different ways.
+1. With the path of a playlist.
+2. With the name of an artist or the title of an album, which will be used for a search on your slimserver.
+For the first way, the request object just contains one attibute : "path", for example :
+```
+{
+    "path" : "spotify://user:legrosmanu:playlist:40xqGToCIq7PLn4CdZSNAO"
+}
+```
+For the second way, the request object contains "album_title" or "artist_name" attributes, for example :
+```
+{
+    "album_title" : "black album"
+} 
+or 
+{
+    "artist_name" : "metallica"
+}
+```
+
+### DELETE /player/{uuid}/playlist to remove all the tracks on the playlist
+Just clear all the tracks with the DELETE verb.

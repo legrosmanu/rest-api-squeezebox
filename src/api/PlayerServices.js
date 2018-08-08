@@ -1,6 +1,6 @@
 var Security = require('./token');
 let SlimHelper = require('../slim-server-wrapper/SlimHelper');
-var Player = require('../integration/Player');
+var Player = require('../integration/player/Player');
 
 exports.setEndPoints = function (app) {
 
@@ -60,6 +60,43 @@ exports.setEndPoints = function (app) {
         }
     });
 
+    // To change the playlist to play on the player, this endpoint wait the path of the new playlist
+    app.patch('/players/:uuid/playlist', requireAuthentication, async (req, res) => {
+        try {
+            let player = new Player(req.params.uuid);
+            await player.init();
+            if (req.body.path !== undefined) {
+                await player.getPlaylist().changePath(req.body.path);
+            } else if (req.body.album_title !== undefined) {
+                await player.getPlaylist().searchAlbum(req.body.album_title);
+            } else if (req.body.artist_name !== undefined) {
+                await player.getPlaylist().searchArtist(req.body.artist_name);
+            } else {
+                let error = {
+                    codeHTTP: 400,
+                    message: "The object is not well formed."
+                };
+                throw error;
+            }
+            res.sendStatus(204);
+        } catch (error) {
+            let errorToSend = errorManager(error, 'PATCH', '/players/:uuid/playlist');
+            res.status(errorToSend.codeHTTP).send(errorToSend);
+        }
+    });
+
+    app.delete('/players/:uuid/playlist', requireAuthentication, async (req, res) => {
+        try {
+            let player = new Player(req.params.uuid);
+            await player.init();
+            await player.getPlaylist().clear();
+            res.sendStatus(204);
+        } catch (error) {
+            let errorToSend = errorManager(error, 'DELETE', '/players/:uuid/playlist');
+            res.status(errorToSend.codeHTTP).send(errorToSend);
+        }
+    });
+
     // According to the body, we had on an array the promises to execute, and then execute them.
     app.patch('/players/:uuid/mixer', requireAuthentication, async (req, res) => {
         try {
@@ -87,8 +124,8 @@ var errorManager = (error, HTTPMethod, URI) => {
         errorToSend = error;
     } else {
         errorToSend = {
-            codeHTTP : 500,
-            message : 'Ooooppppssss. There is a problem with the ' + HTTPMethod + ' on ' + URI
+            codeHTTP: 500,
+            message: 'Ooooppppssss. There is a problem with the ' + HTTPMethod + ' on ' + URI
         };
     }
     console.log(errorToSend.message);

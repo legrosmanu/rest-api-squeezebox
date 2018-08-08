@@ -1,6 +1,7 @@
-let SlimHelper = require('../slim-server-wrapper/SlimHelper');
+let SlimHelper = require('../../slim-server-wrapper/SlimHelper');
 let Mixer = require('./Mixer');
 let SongPlayed = require('./SongPlayed');
+let Playlist = require('./Playlist');
 
 module.exports = class Player {
 
@@ -39,6 +40,8 @@ module.exports = class Player {
             this.model = player.modelname;
             this.firmwareVersion = player.firmware;
 
+            this.playlist = new Playlist(this);
+
             this.mixer = new Mixer(this);
             this.songPlayed = new SongPlayed(this);
             const data = await Promise.all([
@@ -60,6 +63,10 @@ module.exports = class Player {
 
     getSongPlayed() {
         return this.songPlayed;
+    }
+
+    getPlaylist() {
+        return this.playlist;
     }
 
     // newState can be on or off

@@ -1,4 +1,4 @@
-let SlimHelper = require('../slim-server-wrapper/SlimHelper');
+let SlimHelper = require('../../slim-server-wrapper/SlimHelper');
 
 module.exports = class SongPlayed {
 
