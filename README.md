@@ -126,7 +126,7 @@ Actually, you just can change the value of play_state and the index_in_playlist 
 If you change the value of play_state of you player, it will play or stop the music on your player.
 Notice that it's possible to change the song played for the next in playlist, if you send "+1" for song_currently_played.index_in_playlist.
 
-### PATCH /players/{uuid}/mixer to turn off or on a player ou just to change the volume
+### PATCH /players/{uuid}/mixer to turn off or on a player, or just to change the volume
 PATCH /players/{uuid}/mixer is to patch the mixer :-). So you can use it to turn on or off your player, or change volume, bass and treble. For example, if you want turn off your player, you can send :
 ```
 {
@@ -141,10 +141,12 @@ Or, if you want to change the volume :
 ```
 Refer to the GET /players/{uuid} to see what is the mixer object.
 
-### PATCH /playser/{uuid}/playlist to change the playlist to play on the player
+
+### PATCH /players/{uuid}/playlist to change the playlist to play on the player
 You can change the playlist to play in different ways.
 1. With the path of a playlist.
 2. With the name of an artist or the title of an album, which will be used for a search on your slimserver.
+
 For the first way, the request object just contains one attibute : "path", for example :
 ```
 {
